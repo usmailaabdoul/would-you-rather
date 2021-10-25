@@ -22,18 +22,8 @@ const CardWrapper = styled.div`
   margin-top: 20px;
 `;
 
-const Home = ({ getInitialData, questions, questionIds }) => {
-  const [answered, setAnsweredQuestions] = useState([]);
-  const [unAnswered, setUnAnsweredQuestions] = useState([]);
+const Home = ({ answered, unAnswered, getInitialData}) => {
   const [view, setView] = useState('unAnswered');
-
-  useEffect(() => {
-    let _unAnswered = questionIds.filter((q) => questions[q].optionOne.votes.length === 0 && questions[q].optionTwo.votes.length === 0);
-    let _answered = questionIds.filter((q) => questions[q].optionOne.votes.length !== 0 || questions[q].optionTwo.votes.length !== 0);
-
-    setAnsweredQuestions(_answered);
-    setUnAnsweredQuestions(_unAnswered);
-  }, [questionIds, questions]);
 
   useEffect(() => {
     getInitialData()
@@ -79,10 +69,11 @@ const Home = ({ getInitialData, questions, questionIds }) => {
   )
 }
 
-const mapStateToProps = ({ questions }) => {
+const mapStateToProps = ({ questions, authedUser }) => {
+  const id = Object.keys(questions).sort((a, b) => questions[b].timestamp - questions[a].timestamp)
   return {
-    questionIds: Object.keys(questions).sort((a, b) => questions[b].timestamp - questions[a].timestamp),
-    questions
+    unAnswered: id.filter((q) => !questions[q].optionOne.votes.includes(authedUser) && !questions[q].optionTwo.votes.includes(authedUser)),
+    answered: id.filter((q) => questions[q].optionOne.votes.includes(authedUser) || questions[q].optionTwo.votes.includes(authedUser))
   }
 }
 

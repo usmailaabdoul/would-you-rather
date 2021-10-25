@@ -1,17 +1,22 @@
-import React from 'react'
+import { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from "react-router-dom";
 import './App.css'
 import { connect } from 'react-redux'
-import { Home, Login, Results, NewQuestion, Answer, LeaderBoard } from './containers';
+import { Home, Login, Results, NewQuestion, Answer, LeaderBoard, Page404 } from './containers';
 import { NavBar } from './components';
 import LoadingBar from 'react-redux-loading';
+import { getInitialData } from './redux/actions/shared';
+import PrivateRoute from './utils/PrivateRoute';
 
-const App = ({ authedUser }) => {
+const App = ({ getInitialData }) => {
+  useEffect(() => {
+    getInitialData()
+  }, [getInitialData]);
+
   return (
     <div className="app">
       <Router>
@@ -19,14 +24,24 @@ const App = ({ authedUser }) => {
         <LoadingBar />
         <div className="container">
           <Switch>
-            <Route exact path="/">
-              {!authedUser ? <Redirect to="/login" /> : <Home />}
-            </Route>
-            <Route path="/questions/:id" component={Results} />
-            <Route path="/answer/:id" component={Answer} />
-            <Route path="/add" component={NewQuestion} />
-            <Route path="/leaderboard" component={LeaderBoard} />
+            <PrivateRoute exact path="/">
+              <Home />
+            </PrivateRoute>
+            <PrivateRoute path="/questions/:id">
+              <Answer />
+            </PrivateRoute>
+            <PrivateRoute path="/answer/:id">
+              <Results />
+            </PrivateRoute>
+            <PrivateRoute path="/add">
+              <NewQuestion />
+            </PrivateRoute>
+            <PrivateRoute path="/leaderboard">
+              <LeaderBoard />
+            </PrivateRoute>
             <Route path="/login" component={Login} />
+            {/* <Route component={Page404}/> */}
+
           </Switch>
         </div>
       </Router>
@@ -39,4 +54,4 @@ const mapStateToProps = ({ authedUser }) => {
     authedUser,
   }
 }
-export default connect(mapStateToProps, null)(App)
+export default connect(mapStateToProps, { getInitialData })(App)

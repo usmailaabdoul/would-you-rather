@@ -39,7 +39,7 @@ const NabLink = styled('div')(({ active }) => ({
   padding: '0px 5px 2px 5px',
 }));
 
-const NavBar = ({ authedUser, logoutUser }) => {
+const NavBar = ({ authedUser, logoutUser, users }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const location = useLocation();
   const history = useHistory();
@@ -90,6 +90,7 @@ const NavBar = ({ authedUser, logoutUser }) => {
           <Box sx={{ flexGrow: 1 }} />
           {authedUser ? (
             <div>
+              <h7>{users[authedUser].name}</h7>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -98,7 +99,7 @@ const NavBar = ({ authedUser, logoutUser }) => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <img className="avatar" src={users[authedUser].avatarURL} alt="avatar" style={{width: '40px', height: '40px', borderRadius: '20px'}}/>
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -129,9 +130,10 @@ const NavBar = ({ authedUser, logoutUser }) => {
   );
 }
 
-const mapStateToProps = ({ authedUser }) => {
+const mapStateToProps = ({ authedUser, users }) => {
   return {
-    authedUser
+    authedUser,
+    users
   }
 }
 export default connect(mapStateToProps, { logoutUser })(NavBar)

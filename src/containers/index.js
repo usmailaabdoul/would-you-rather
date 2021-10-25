@@ -4,6 +4,7 @@ import Results from './results'
 import NewQuestion from './newQuestion'
 import Answer from './answer'
 import LeaderBoard from './leaderBoard';
+import Page404 from './page404';
 
 export {
   Home,
@@ -11,5 +12,6 @@ export {
   Results,
   NewQuestion,
   Answer,
-  LeaderBoard
+  LeaderBoard,
+  Page404
 }

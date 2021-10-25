@@ -80,14 +80,14 @@ const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
   }, [id, questions]);
 
   const viewAnswer = () => {
-    history.push(`/questions/${id}`, {
+    history.push(`/answer/${id}`, {
       id,
       question
     })
   }
 
   const viewQuestion = () => {
-    history.push(`/answer/${id}`, {
+    history.push(`/questions/${id}`, {
       id,
       question
     })

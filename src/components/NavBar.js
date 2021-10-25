@@ -10,7 +10,7 @@ import Menu from '@mui/material/Menu';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux';
 import { logoutUser } from '../redux/actions/authedUser';
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useHistory } from 'react-router-dom'
 
 const StyledAppBar = styled(AppBar)`
   && {
@@ -40,12 +40,13 @@ const NabLink = styled('div')(({ active }) => ({
 }));
 
 const NavBar = ({ authedUser, logoutUser }) => {
-  // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [active, setActive] = React.useState('home');
+  const location = useLocation();
+  const history = useHistory();
 
   const logOut = () => {
     logoutUser()
+    history.push('/login')
     setAnchorEl(null);
   };
 
@@ -67,20 +68,20 @@ const NavBar = ({ authedUser, logoutUser }) => {
           {authedUser && (
             <NabLinks>
               <NabLink 
-                active={active === 'home'} onClick={()=> setActive('home')}>
+                active={location.pathname === '/'}>
                 <Link to="/">
                   Home
                 </Link>
               </NabLink>
               <NabLink 
-                active={active === 'newQuestion'} onClick={()=> setActive('newQuestion')}>
-                <Link to="/newQuestion">
+                active={location.pathname === '/add'}>
+                <Link to="/add">
                   New Question
                 </Link>
               </NabLink>
               <NabLink 
-                active={active === 'leaderBoard'} onClick={()=> setActive('leaderBoard')}>
-                <Link to="/leaderBoard">
+                active={location.pathname === '/leaderboard'}>
+                <Link to="/leaderboard">
                   Leader Board
                 </Link>
               </NabLink>

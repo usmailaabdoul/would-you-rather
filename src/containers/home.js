@@ -60,7 +60,7 @@ const Home = ({ getInitialData, questions, questionIds }) => {
             <QuestionCard
               key={id}
               id={id}
-              notQuestion={false}
+              answered={false}
             />
           ))}
         </CardWrapper>
@@ -70,7 +70,7 @@ const Home = ({ getInitialData, questions, questionIds }) => {
             <QuestionCard
               key={id}
               id={id}
-              notQuestion={true}
+              answered={true}
             />
           ))}
         </CardWrapper>

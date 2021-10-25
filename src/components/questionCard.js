@@ -1,11 +1,6 @@
 import styled from '@emotion/styled';
 import { connect } from 'react-redux'
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import { useEffect, useState } from 'react';
-import { _saveQuestionAnswer } from '../utils/index';
 import { useHistory } from 'react-router-dom';
 
 const Card = styled.div`
@@ -75,10 +70,8 @@ const Card = styled.div`
   }
 `;
 
-const QuestionCard = ({ user, notQuestion, authedUser, id, questions }) => {
+const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
   const [question, setQuestion] = useState({});
-  const [answer, setAnswer] = useState('optionOne');
-  const [viewQuestion, setViewQuestion] = useState(false);
 
   const history = useHistory();
 
@@ -86,17 +79,15 @@ const QuestionCard = ({ user, notQuestion, authedUser, id, questions }) => {
     setQuestion(questions[id])
   }, [id, questions]);
 
-  const submitAns = async () => {
-    try {
-      await _saveQuestionAnswer({authedUser, qid: id, answer});
-      setViewQuestion(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const viewAnswer = () => {
+    history.push(`/questions/${id}`, {
+      id,
+      question
+    })
   }
 
-  const viewAnswer = () => {
-    history.push(`/results/${id}`, {
+  const viewQuestion = () => {
+    history.push(`/answer/${id}`, {
       id,
       question
     })
@@ -104,52 +95,23 @@ const QuestionCard = ({ user, notQuestion, authedUser, id, questions }) => {
 
   return (
     <Card>
-      {!viewQuestion ? (
-        <>
-          <div className="avatar-wrapper">
-            <img src={user?.avatarURL ? user.avatarURL : 'https://'} alt="avatar" />
-          </div>
-          <div className="info-wrapper">
-            <div className="name">{user.name} asks:</div>
-            <div className="question">
-              <div>Would you rather?</div>
-              {question.hasOwnProperty('id') && (
-                <p>{question.optionOne.text.substr(0, 10)}...</p>
-              )}
-              <button 
-                onClick={() => !notQuestion ? viewAnswer() : setViewQuestion(true)}
-              >
-                  See Question
-                </button>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="avatar-wrapper">
-            <img src={user.avatarURL && user.avatarURL} alt="avatar" />
-          </div>
-          <div className="info-wrapper">
-            <div className="question-h2">
-              <div>Would you rather...?</div>
-            </div>
-            {question.hasOwnProperty('id') && (
-              <FormControl component="fieldset">
-                <RadioGroup
-                  aria-label="gender"
-                  defaultValue='optionOne'
-                  name="radio-buttons-group"
-                  onChange={(e) => setAnswer(e.target.value)}
-                >
-                  <FormControlLabel value='optionOne' control={<Radio />} label={question.optionOne.text} />
-                  <FormControlLabel value='optionTwo' control={<Radio />} label={question.optionTwo.text} />
-                </RadioGroup>
-              </FormControl>
-            )}
-            <button onClick={() => submitAns()}>Answer Question</button>
-          </div>
-        </>
-      )}
+      <div className="avatar-wrapper">
+        <img src={user?.avatarURL ? user.avatarURL : 'https://'} alt="avatar" />
+      </div>
+      <div className="info-wrapper">
+        <div className="name">{user.name} asks:</div>
+        <div className="question">
+          <div>Would you rather?</div>
+          {question.hasOwnProperty('id') && (
+            <p>{question.optionOne.text.substr(0, 10)}...</p>
+          )}
+          <button
+            onClick={() => answered ? viewAnswer() : viewQuestion()}
+          >
+            See Question
+          </button>
+        </div>
+      </div>
     </Card>
   )
 }

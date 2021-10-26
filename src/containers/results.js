@@ -124,7 +124,7 @@ const Results = ({ authedUser, users }) => {
   const getPacentage = (voteCount, question) => {
     let totalQuestions = question.optionOne.votes.length + question.optionTwo.votes.length;
 
-    return (voteCount / totalQuestions) * 100;
+    return ((voteCount / totalQuestions) * 100).toFixed(2);
   }
 
   return (

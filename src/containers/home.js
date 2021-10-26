@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { getInitialData } from '../redux/actions/shared';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import styled from '@emotion/styled';
@@ -22,13 +21,16 @@ const CardWrapper = styled.div`
   margin-top: 20px;
 `;
 
-const Home = ({ answered, unAnswered, getInitialData}) => {
+const Home = ({ answered, unAnswered}) => {
+  const [_answered, setAnswered] = useState(answered);
+  const [_unAnswered, setUnAnswered] = useState(unAnswered);
   const [view, setView] = useState('unAnswered');
 
   useEffect(() => {
-    getInitialData()
-  }, [getInitialData]);
-
+    setAnswered(answered);
+    setUnAnswered( unAnswered);
+  }, [answered, unAnswered]);
+  
   return (
     <div>
       <StyledButtonGroup size="large" aria-label="large button group">
@@ -46,7 +48,7 @@ const Home = ({ answered, unAnswered, getInitialData}) => {
 
       {view === 'unAnswered' ? (
         <CardWrapper>
-          {unAnswered && unAnswered.map(id => (
+          {_unAnswered && _unAnswered.map(id => (
             <QuestionCard
               key={id}
               id={id}
@@ -56,7 +58,7 @@ const Home = ({ answered, unAnswered, getInitialData}) => {
         </CardWrapper>
       ) : (
         <CardWrapper>
-          {answered && answered.map(id => (
+          {_answered && _answered.map(id => (
             <QuestionCard
               key={id}
               id={id}
@@ -77,4 +79,4 @@ const mapStateToProps = ({ questions, authedUser }) => {
   }
 }
 
-export default connect(mapStateToProps, { getInitialData })(Home)
+export default connect(mapStateToProps, null)(Home)

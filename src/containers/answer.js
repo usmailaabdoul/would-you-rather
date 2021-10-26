@@ -7,6 +7,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import {getData} from '../redux/actions/shared';
 
 const Card = styled.div`
   width: 480px;
@@ -64,7 +65,7 @@ const Card = styled.div`
   }
 `;
 
-const Answer = ({ authedUser, users }) => {
+const Answer = ({ authedUser, users, getData }) => {
   const [_user, setUser] = useState({});
   const [answer, setAnswer] = useState('optionOne');
 
@@ -78,6 +79,7 @@ const Answer = ({ authedUser, users }) => {
   const submitAns = async () => {
     try {
       await _saveQuestionAnswer({ authedUser, qid: question.id, answer });
+      await getData()
       history.push('/')
     } catch (error) {
       console.log(error);
@@ -120,4 +122,4 @@ const mapStateToProps = ({ users, authedUser }) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Answer);
+export default connect(mapStateToProps, {getData})(Answer);

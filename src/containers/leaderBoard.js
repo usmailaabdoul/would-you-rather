@@ -1,3 +1,4 @@
+import { useState, useEffect} from 'react';
 import styled from '@emotion/styled';
 import { connect } from 'react-redux'
 
@@ -58,23 +59,31 @@ const Card = styled.div`
 `;
 
 const LeaderBoard = ({ userIDs, users }) => {
+  const [_users, setUsers] = useState(users);
+  const [_userIDs, setUserIDs] = useState(userIDs);
+
+  useEffect(() => {
+    setUsers(users)
+    setUserIDs(userIDs)
+  }, [userIDs, users]);
+
   return (
     <>
-      {userIDs.map(id => (
+      {_userIDs.map(id => (
         <Card key={id}>
           <div className="avatar-wrapper">
-            <img src={users[id].avatarURL ? users[id].avatarURL : 'https://'} alt="avatar" />
+            <img src={_users[id].avatarURL ? _users[id].avatarURL : 'https://'} alt="avatar" />
           </div>
           <div className="info-wrapper">
-            <div className="name">{users[id].name}</div>
+            <div className="name">{_users[id].name}</div>
             <div className="stats">
-              <div>Answered questions: {users[id].questions.length}</div>
-              <div>Asked questions: {Object.keys(users[id].answers).length}</div>
+              <div>Answered questions: {_users[id].questions.length}</div>
+              <div>Asked questions: {Object.keys(_users[id].answers).length}</div>
             </div>
           </div>
           <div className="total">
             <div>Total Score</div>
-            <div className="score">{users[id].questions.length + Object.keys(users[id].answers).length}</div>
+            <div className="score">{_users[id].questions.length + Object.keys(users[id].answers).length}</div>
           </div>
         </Card>
       ))}

@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { _saveQuestion } from '../utils';
 import { useHistory } from 'react-router-dom';
+import { newQuestion } from '../redux/actions/questions'
+import { showLoading, hideLoading} from 'react-redux-loading';
 
 const Card = styled.div`
   width: 480px;
@@ -48,7 +50,7 @@ const Card = styled.div`
   }
 `;
 
-const NewQuestion = ({ authedUser }) => {
+const NewQuestion = ({ authedUser, newQuestion, showLoading, hideLoading }) => {
   const [optionOne, setOptionOne] = useState('');
   const [optionTwo, setOptionTwo] = useState('');
   const [optionOneError, setoptionOneError] = useState(false);
@@ -65,13 +67,18 @@ const NewQuestion = ({ authedUser }) => {
       setOptionTwoError(true);
       return
     }
+    showLoading()
+    
     try {
       let question = {
         author: authedUser,
         optionOneText: optionOne,
         optionTwoText: optionTwo,
       }
-      await _saveQuestion(question);
+      
+      const res = await _saveQuestion(question);
+      newQuestion(res);
+      hideLoading()
       history.push('/');
     } catch (error) {
       console.log(error)
@@ -127,4 +134,4 @@ const mapStateToProps = ({ authedUser }) => {
   }
 }
 
-export default connect(mapStateToProps, null)(NewQuestion);
+export default connect(mapStateToProps, {showLoading, hideLoading, newQuestion})(NewQuestion);

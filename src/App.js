@@ -9,13 +9,13 @@ import { connect } from 'react-redux'
 import { Home, Login, Results, NewQuestion, Answer, LeaderBoard, Page404 } from './containers';
 import { NavBar } from './components';
 import LoadingBar from 'react-redux-loading';
-import { getInitialData } from './redux/actions/shared';
+import { getData } from './redux/actions/shared';
 import PrivateRoute from './utils/PrivateRoute';
 
-const App = ({ getInitialData }) => {
+const App = ({ getData }) => {
   useEffect(() => {
-    getInitialData()
-  }, [getInitialData]);
+    getData()
+  }, [getData]);
 
   return (
     <div className="app">
@@ -54,4 +54,4 @@ const mapStateToProps = ({ authedUser }) => {
     authedUser,
   }
 }
-export default connect(mapStateToProps, { getInitialData })(App)
+export default connect(mapStateToProps, { getData })(App)

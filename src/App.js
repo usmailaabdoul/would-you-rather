@@ -24,24 +24,13 @@ const App = ({ getData }) => {
         <LoadingBar />
         <div className="container">
           <Switch>
-            <PrivateRoute exact path="/">
-              <Home />
-            </PrivateRoute>
-            <PrivateRoute path="/questions/:id">
-              <Answer />
-            </PrivateRoute>
-            <PrivateRoute path="/answer/:id">
-              <Results />
-            </PrivateRoute>
-            <PrivateRoute path="/add">
-              <NewQuestion />
-            </PrivateRoute>
-            <PrivateRoute path="/leaderboard">
-              <LeaderBoard />
-            </PrivateRoute>
-            <Route path="/login" component={Login} />
-            {/* <Route component={Page404}/> */}
-
+            <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute exact path="/answer/:id" component={Answer} />
+            <PrivateRoute exact path="/questions/:id" component={Results} />
+            <PrivateRoute exact path="/add" component={NewQuestion} />
+            <PrivateRoute exact path="/leaderboard" component={LeaderBoard} />
+            <Route exact path="/login" component={Login} />
+            <Route path="*" component={Page404}/>
           </Switch>
         </div>
       </Router>

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 const Card = styled.div`
   width: 480px;
@@ -111,15 +111,24 @@ const Card = styled.div`
   }
 `;
 
-const Results = ({ authedUser, users }) => {
+const Results = ({ authedUser, users, questions }) => {
   const [_user, setUser] = useState({});
+  const [question, setQuestion] = useState(null);
 
   const history = useHistory();
-  const { question } = history.location.state
+  const params = useParams();
+  const { id } = params;
 
   useEffect(() => {
-    setUser(users[question.author])
-  }, [question.author, users])
+    console.log({id})
+    if (id === 'undefined') {
+      console.log('redirecting')
+      return history.push('/notfound')
+    }
+
+    setUser(users[questions[id].author])
+    setQuestion(questions[id])
+  }, [history, id, questions, users])
 
   const getPacentage = (voteCount, question) => {
     let totalQuestions = question.optionOne.votes.length + question.optionTwo.votes.length;
@@ -129,60 +138,65 @@ const Results = ({ authedUser, users }) => {
 
   return (
     <Card>
-      <div className="avatar-wrapper">
-        <img src={_user.avatarURL} alt="avatar" />
-      </div>
-      <div className="info-wrapper">
-        <div className="name">Asked by {_user.name}</div>
-        <div className="question">
-          <div>Results</div>
-        </div>
-        <div>
-          <div 
-            className="answered-wrapper" 
-            style={question.optionOne.votes.includes(authedUser) ? {background: '#28a745'} : {background: '#9B51E0'}}
-          >
-            <div className='answered'>
-              <div className="asw-question">{question.optionOne.text}</div>
-              <div className="percentage">
-                <span>{getPacentage(question.optionOne.votes.length, question)}%</span>
-                {question.optionOne.votes.length} of {question.optionOne.votes.length + question.optionTwo.votes.length} votes
-              </div>
-            </div>
-            {question.optionOne.votes.includes(authedUser) && (
-              <div className="your-vote">
-                your vote
-              </div>
-            )}
+      {question && (
+        <>
+          <div className="avatar-wrapper">
+            <img src={_user.avatarURL} alt="avatar" />
           </div>
+          <div className="info-wrapper">
+            <div className="name">Asked by {_user.name}</div>
+            <div className="question">
+              <div>Results</div>
+            </div>
+            <div>
+              <div
+                className="answered-wrapper"
+                style={question.optionOne.votes.includes(authedUser) ? { background: '#28a745' } : { background: '#9B51E0' }}
+              >
+                <div className='answered'>
+                  <div className="asw-question">{question.optionOne.text}</div>
+                  <div className="percentage">
+                    <span>{getPacentage(question.optionOne.votes.length, question)}%</span>
+                    {question.optionOne.votes.length} of {question.optionOne.votes.length + question.optionTwo.votes.length} votes
+                  </div>
+                </div>
+                {question.optionOne.votes.includes(authedUser) && (
+                  <div className="your-vote">
+                    your vote
+                  </div>
+                )}
+              </div>
 
-          <div 
-            className="notanswered-wrapper"
-            style={question.optionTwo.votes.includes(authedUser) ? {background: '#28a745'} : {background: '#9B51E0'}}
-          >
-            <div className='notanswered'>
-              <div className="asw-question">{question.optionTwo.text}</div>
-              <div className="percentage">
-                <span>{getPacentage(question.optionTwo.votes.length, question)}%</span>
-                {question.optionTwo.votes.length} of {question.optionOne.votes.length + question.optionTwo.votes.length} votes
+              <div
+                className="notanswered-wrapper"
+                style={question.optionTwo.votes.includes(authedUser) ? { background: '#28a745' } : { background: '#9B51E0' }}
+              >
+                <div className='notanswered'>
+                  <div className="asw-question">{question.optionTwo.text}</div>
+                  <div className="percentage">
+                    <span>{getPacentage(question.optionTwo.votes.length, question)}%</span>
+                    {question.optionTwo.votes.length} of {question.optionOne.votes.length + question.optionTwo.votes.length} votes
+                  </div>
+                </div>
+                {question.optionTwo.votes.includes(authedUser) && (
+                  <div className="your-vote">
+                    your vote
+                  </div>
+                )}
               </div>
             </div>
-            {question.optionTwo.votes.includes(authedUser) && (
-              <div className="your-vote">
-                your vote
-              </div>
-            )}
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </Card>
   )
 }
 
-const mapStateToProps = ({ users, authedUser }) => {
+const mapStateToProps = ({ users, authedUser, questions }) => {
   return {
     users,
-    authedUser
+    authedUser,
+    questions
   }
 }
 

@@ -5,6 +5,7 @@
 
 After cloning the project in your directory, you can run:
 
+### `yarn Install`
 ### `yarn start`
 
 to start the development server which:

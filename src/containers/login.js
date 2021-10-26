@@ -59,6 +59,7 @@ const Card = styled.div`
 const Login = ({ users, setAuthedUser }) => {
   const [user, setUser] = useState('');
   const history = useHistory();
+  const { state } = history.location;
 
   const handleChange = (event) => {
     setUser(event.target.value);
@@ -66,6 +67,9 @@ const Login = ({ users, setAuthedUser }) => {
 
   const login = () => {
     setAuthedUser(user)
+    if (state?.from.length) {
+      return history.push(state.from);
+    }
     history.push('/')
   }
 

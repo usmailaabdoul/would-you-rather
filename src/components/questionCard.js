@@ -88,8 +88,7 @@ const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
 
   const viewQuestion = () => {
     history.push(`/questions/${id}`, {
-      id,
-      question
+      id
     })
   }
 
@@ -106,7 +105,7 @@ const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
             <p>{question.optionOne.text.substr(0, 10)}...</p>
           )}
           <button
-            onClick={() => answered ? viewAnswer() : viewQuestion()}
+            onClick={() => answered ? viewQuestion() : viewAnswer()}
           >
             See Question
           </button>

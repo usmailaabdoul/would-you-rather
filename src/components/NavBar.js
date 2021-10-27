@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import styled from '@emotion/styled';
@@ -68,7 +67,7 @@ const NavBar = ({ authedUser, logoutUser, users }) => {
           {authedUser && (
             <NabLinks>
               <NabLink 
-                active={location.pathname === '/'}>
+                active={location.pathname === '/' || '/questions/:id'}>
                 <Link to="/">
                   Home
                 </Link>
@@ -90,7 +89,7 @@ const NavBar = ({ authedUser, logoutUser, users }) => {
           <Box sx={{ flexGrow: 1 }} />
           {authedUser ? (
             <div>
-              <h7>{users[authedUser].name}</h7>
+              <span>{users[authedUser].name}</span>
               <IconButton
                 size="large"
                 aria-label="account of current user"

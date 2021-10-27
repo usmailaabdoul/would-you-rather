@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
-import { connect } from 'react-redux'
-import { useHistory } from 'react-router-dom';
 import { _saveQuestionAnswer } from '../utils/index';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import {getData} from '../redux/actions/shared';
+import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux'
+
+import { getData } from '../redux/actions/shared';
 
 const Card = styled.div`
   width: 480px;
@@ -65,16 +66,9 @@ const Card = styled.div`
   }
 `;
 
-const Answer = ({ authedUser, users, getData }) => {
-  const [_user, setUser] = useState({});
+const UnAnsweredPoll = ({ authedUser, user, question, getData }) => {
   const [answer, setAnswer] = useState('optionOne');
-
   const history = useHistory();
-  const { question } = history.location.state
-
-  useEffect(() => {
-    setUser(users[question.author])
-  }, [question.author, users])
 
   const submitAns = async () => {
     try {
@@ -89,37 +83,34 @@ const Answer = ({ authedUser, users, getData }) => {
   return (
     <Card>
       <div className="avatar-wrapper">
-        <img src={_user.avatarURL && _user.avatarURL} alt="avatar" />
+        <img src={user.avatarURL && user.avatarURL} alt="avatar" />
       </div>
       <div className="info-wrapper">
-      <div className="name">{_user.name} asks:</div>
+        <div className="name">{user.name} asks:</div>
         <div className="question">
           <div>Would you rather...?</div>
         </div>
-        {question.hasOwnProperty('id') && (
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="gender"
-              defaultValue='optionOne'
-              name="radio-buttons-group"
-              onChange={(e) => setAnswer(e.target.value)}
-            >
-              <FormControlLabel value='optionOne' control={<Radio />} label={question.optionOne.text} />
-              <FormControlLabel value='optionTwo' control={<Radio />} label={question.optionTwo.text} />
-            </RadioGroup>
-          </FormControl>
-        )}
+        <FormControl component="fieldset">
+          <RadioGroup
+            aria-label="gender"
+            defaultValue='optionOne'
+            name="radio-buttons-group"
+            onChange={(e) => setAnswer(e.target.value)}
+          >
+            <FormControlLabel value='optionOne' control={<Radio />} label={question.optionOne.text} />
+            <FormControlLabel value='optionTwo' control={<Radio />} label={question.optionTwo.text} />
+          </RadioGroup>
+        </FormControl>
         <button onClick={() => submitAns()}>Answer Question</button>
       </div>
     </Card>
   )
 }
 
-const mapStateToProps = ({ users, authedUser }) => {
+const mapStateToProps = ({ authedUser }) => {
   return {
-    users,
     authedUser
   }
 }
 
-export default connect(mapStateToProps, {getData})(Answer);
+export default connect(mapStateToProps, { getData })(UnAnsweredPoll)

@@ -6,7 +6,14 @@ import {
 } from "react-router-dom";
 import './App.css'
 import { connect } from 'react-redux'
-import { Home, Login, Results, NewQuestion, Answer, LeaderBoard, Page404 } from './containers';
+import { 
+  Home, 
+  Login, 
+  NewQuestion, 
+  LeaderBoard, 
+  Page404, 
+  Questions 
+} from './containers';
 import { NavBar } from './components';
 import LoadingBar from 'react-redux-loading';
 import { getData } from './redux/actions/shared';
@@ -25,8 +32,7 @@ const App = ({ getData }) => {
         <div className="container">
           <Switch>
             <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute exact path="/answer/:id" component={Answer} />
-            <PrivateRoute exact path="/questions/:id" component={Results} />
+            <PrivateRoute exact path="/questions/:id" component={Questions} />
             <PrivateRoute exact path="/add" component={NewQuestion} />
             <PrivateRoute exact path="/leaderboard" component={LeaderBoard} />
             <Route exact path="/login" component={Login} />

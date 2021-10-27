@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
-import { useParams, useHistory } from 'react-router-dom';
 
 const Card = styled.div`
   width: 480px;
@@ -111,24 +109,7 @@ const Card = styled.div`
   }
 `;
 
-const Results = ({ authedUser, users, questions }) => {
-  const [_user, setUser] = useState({});
-  const [question, setQuestion] = useState(null);
-
-  const history = useHistory();
-  const params = useParams();
-  const { id } = params;
-
-  useEffect(() => {
-    console.log({id})
-    if (id === 'undefined') {
-      console.log('redirecting')
-      return history.push('/notfound')
-    }
-
-    setUser(users[questions[id].author])
-    setQuestion(questions[id])
-  }, [history, id, questions, users])
+const AnsweredPoll = ({ authedUser, user, question }) => {
 
   const getPacentage = (voteCount, question) => {
     let totalQuestions = question.optionOne.votes.length + question.optionTwo.votes.length;
@@ -141,10 +122,10 @@ const Results = ({ authedUser, users, questions }) => {
       {question && (
         <>
           <div className="avatar-wrapper">
-            <img src={_user.avatarURL} alt="avatar" />
+            <img src={user.avatarURL} alt="avatar" />
           </div>
           <div className="info-wrapper">
-            <div className="name">Asked by {_user.name}</div>
+            <div className="name">Asked by {user.name}</div>
             <div className="question">
               <div>Results</div>
             </div>
@@ -192,12 +173,10 @@ const Results = ({ authedUser, users, questions }) => {
   )
 }
 
-const mapStateToProps = ({ users, authedUser, questions }) => {
+const mapStateToProps = ({ authedUser }) => {
   return {
-    users,
     authedUser,
-    questions
   }
 }
 
-export default connect(mapStateToProps, null)(Results);
+export default connect(mapStateToProps, null)(AnsweredPoll)

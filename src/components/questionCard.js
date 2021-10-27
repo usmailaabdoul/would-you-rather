@@ -79,17 +79,8 @@ const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
     setQuestion(questions[id])
   }, [id, questions]);
 
-  const viewAnswer = () => {
-    history.push(`/answer/${id}`, {
-      id,
-      question
-    })
-  }
-
-  const viewQuestion = () => {
-    history.push(`/questions/${id}`, {
-      id
-    })
+  const viewPoll = () => {
+    history.push(`/questions/${id}`)
   }
 
   return (
@@ -105,7 +96,7 @@ const QuestionCard = ({ user, answered, authedUser, id, questions }) => {
             <p>{question.optionOne.text.substr(0, 10)}...</p>
           )}
           <button
-            onClick={() => answered ? viewQuestion() : viewAnswer()}
+            onClick={() => viewPoll()}
           >
             See Question
           </button>
